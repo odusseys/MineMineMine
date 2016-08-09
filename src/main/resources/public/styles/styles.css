@@ -1,0 +1,50 @@
+#header {
+    text-align: center;
+    margin-bottom: 70px;
+    margin-top: 50px;
+}
+
+#content {
+    display: inline-block;
+}
+
+#container {
+    width: 100%;
+    text-align: center;
+}
+
+.launchpad {
+    text-align: center;
+    width: 50px;
+    height: 50px;
+}
+
+.launch-button {
+    background-color: #99ccff;
+    width: 30px;
+    height: 30px;
+    border: 1px black solid;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+.tile {
+    height: 50px;
+    width: 50px;
+    text-align: center;
+}
+
+.powerups {
+    padding-left: 50px;
+    margin-bottom: 50px;
+}
+
+.powerup {
+    padding-top: 20px;
+    display: inline-block;
+    width: 70px;
+    height: 50px;
+    text-align: center;
+    cursor: pointer;
+    border: 1px black solid;
+}

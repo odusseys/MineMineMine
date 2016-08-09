@@ -1,0 +1,25 @@
+<div ng-controller="GameController" style="display: inline-block">
+    <div class="powerups">
+        <div class="powerup">BOMB</div>
+        <div class="powerup">CROSS</div>
+        <div class="powerup">NUMBER</div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th ng-repeat="x in tiles" class="launchpad">
+                    <div class="launch-button" ng-click="launchColumn($index)"></div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="tileRow in tiles">
+                <td class="launchpad">
+                    <div class="launch-button" ng-click="launchRow($index)"></div>
+                </td>
+                <td ng-repeat="tile in tileRow" class="tile" ng-style="{'background-color': tileColor(tile)}">{{tile.state}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

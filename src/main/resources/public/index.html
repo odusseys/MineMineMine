@@ -1,0 +1,34 @@
+<html>
+<head>
+    <title>MineMineMine</title>
+    <link data-require="bootstrap-css@3.2.0" data-semver="3.2.0" rel="stylesheet"
+          href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="styles/styles.css">
+
+    <!--    Angular    -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-route.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.3.1/angular-ui-router.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-smart-table/2.1.6/smart-table.js"></script>
+
+    <!-- D3 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.1/d3.min.js"></script>
+
+    <!-- MineMineMine-->
+    <script src="scripts/app.js"></script>
+    <script src="scripts/game.js"></script>
+
+</head>
+<body ng-app="mine">
+<div id="container">
+    <div id="header">
+        <h1>MineMineMine</h1>
+        Mine that shit
+    </div>
+    <div id="content">
+        <div ng-include="'templates/game.html'"></div>
+    </div>
+</div>
+
+</body>
+</html>

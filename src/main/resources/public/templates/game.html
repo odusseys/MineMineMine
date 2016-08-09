@@ -1,14 +1,23 @@
 <div ng-controller="GameController" style="display: inline-block">
     <div class="powerups">
-        <button class="powerup" ng-click="toggleBombMode()">BOMB</button>
-        <button class="powerup" ng-click="toggleCrossMode()">CROSS</button>
-        <button class="powerup" ng-click="toggleNumberMode()">NUMBER</button>
+        <button class="powerup" ng-click="toggleBombMode()" ng-disabled="state.bombCDR > 0">
+            <span ng-show="state.bombCDR == 0">BOMB</span>
+            <span ng-show="state.bombCDR > 0" style="color: white">{{state.bombCDR}}</span>
+        </button>
+        <button class="powerup" ng-click="toggleCrossMode()" ng-disabled="state.crossCDR > 0">
+            <span ng-show="state.crossCDR == 0">CROSS</span>
+            <span ng-show="state.crossCDR > 0" style="color: white">{{state.crossCDR}}</span>
+        </button>
+        <button class="powerup" ng-click="toggleNumberMode()" ng-disabled="state.numberCDR > 0">
+            <span ng-show="state.numberCDR == 0">NUMBER</span>
+            <span ng-show="state.numberCDR > 0" style="color: white">{{state.numberCDR}}</span>
+        </button>
         <button class="powerup" ng-click="decrementAll()" ng-disabled="state.decrementCDR > 0">
             <span ng-show="state.decrementCDR == 0">-1</span>
             <span ng-show="state.decrementCDR > 0" style="color: white">{{state.decrementCDR}}</span>
         </button>
     </div>
-    <table>
+    <table ng-hide="gameState == 'LOST'">
         <thead>
             <tr>
                 <th></th>
@@ -20,12 +29,15 @@
         <tbody>
             <tr ng-repeat="tileRow in tiles">
                 <td class="launchpad">
-                    <div class="launch-button" ng-click="launchRow($index)"></div>
+                    <div class="launch-button" ng-style="{}" ng-click="launchRow($index)"></div>
                 </td>
-                <td ng-repeat="tile in tileRow" class="tile" ng-style="{'background-color': tileColor(tile)}" ng-click="clickTile(tile)">
+                <td ng-repeat="tile in tileRow" class="tile"
+                    ng-style="{'background-color': tileColor(tile), 'cursor': gameState == 'TOGGLED' ? 'pointer' : 'auto'}"
+                    ng-click="clickTile(tile)">
                     {{tile.state}}
                 </td>
             </tr>
         </tbody>
     </table>
+    <div id="you-lose" ng-show="gameState=='LOST'">YOU LOSE</div>
 </div>

@@ -20,7 +20,7 @@
 }
 
 .launch-button {
-    background-color: #99ccff;
+    background-color: #54ccff;
     width: 30px;
     height: 30px;
     border: 1px black solid;
@@ -35,7 +35,6 @@
 }
 
 .powerups {
-    padding-left: 50px;
     margin-bottom: 50px;
 }
 
@@ -51,4 +50,10 @@
 
 .powerup:disabled {
     background: red;
+}
+
+#you-lose {
+    color: red;
+    font-weight: bold;
+    font-size: 300%;
 }

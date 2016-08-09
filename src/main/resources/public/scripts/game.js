@@ -116,10 +116,10 @@ app.factory('TileFactory', ['Tiles', function(Tiles){
             })
         }
 
-        tiles.decrementWithSameNumber = function(i, j){
+        tiles.resetAllWithSameNumber = function(i, j){
             var number = tiles[i][j].state;
             tiles.forEach(function(tile){
-                if(tile.status == number) Tiles.decrement(tile);
+                if(tile.status == number) Tiles.reset(tile);
             });
         };
 
@@ -210,6 +210,48 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
         state.next();
         state.useDecrement();
     }
+
+    var toggleType = null;
+
+    var toggleWithType = function(type){
+        if($scope.gameState == 'TOGGLED'){
+            $scope.gameState = 'PLAYING';
+        } else {
+            $scope.gameState = 'TOGGLED';
+            toggleType = type;
+        }
+    };
+
+    $scope.toggleCrossMode = function(){
+        toggleWithType('CROSS');
+    };
+
+    $scope.toggleBombMode = function(){
+        toggleWithType('BOMB');
+    };
+
+    $scope.toggleNumberMode = function(){
+        toggleWithType('NUMBER');
+    };
+
+    $scope.clickTile = function(tile){
+        if($scope.gameState == 'TOGGLED'){
+            round(function(){
+                if(toggleType == 'CROSS'){
+                    tiles.resetRow(tile.i);
+                    tiles.resetColumn(tile.j);
+                    state.useCross();
+                } else if(toggleType == 'BOMB'){
+                    tiles.bomb(tile.i, tile.j);
+                    state.useBomb();
+                } else if(toggleType == 'NUMBER'){
+                    tiles.resetAllWithSameNumber(tile.i, tile.j);
+                    state.useNumber();
+                }
+            });
+            $scope.gameState = 'PLAYING';
+        }
+    };
 
     var nPopup = 2;
     var nPopupInit = 5;

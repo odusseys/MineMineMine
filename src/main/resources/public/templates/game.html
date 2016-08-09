@@ -1,8 +1,9 @@
 <div ng-controller="GameController" style="display: inline-block">
     <div class="powerups">
-        <div class="powerup">BOMB</div>
-        <div class="powerup">CROSS</div>
-        <div class="powerup">NUMBER</div>
+        <div class="powerup" ng-click="toggleBombMode()">BOMB</div>
+        <div class="powerup" ng-click="toggleCrossMode()">CROSS</div>
+        <div class="powerup" ng-click="toggleNumberMode()">NUMBER</div>
+        <div class="powerup" ng-click="decrementAll()">-1</div>
     </div>
     <table>
         <thead>
@@ -18,7 +19,9 @@
                 <td class="launchpad">
                     <div class="launch-button" ng-click="launchRow($index)"></div>
                 </td>
-                <td ng-repeat="tile in tileRow" class="tile" ng-style="{'background-color': tileColor(tile)}">{{tile.state}}</td>
+                <td ng-repeat="tile in tileRow" class="tile" ng-style="{'background-color': tileColor(tile)}" ng-click="clickTile(tile)">
+                    {{tile.state}}
+                </td>
             </tr>
         </tbody>
     </table>

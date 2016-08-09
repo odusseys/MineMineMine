@@ -1,6 +1,6 @@
 (function(){
 
-function shuffle(a) {
+function shuffled(a) {
     var j, x, i;
     for (i = a.length; i; i--) {
         j = Math.floor(Math.random() * i);
@@ -8,6 +8,7 @@ function shuffle(a) {
         a[i - 1] = a[j];
         a[j] = x;
     }
+    return a;
 }
 
 app.factory('Tiles', [function(){
@@ -15,9 +16,11 @@ app.factory('Tiles', [function(){
 
     tiles.maxState = 5;
 
-    tiles.generate = function(){
+    tiles.generate = function(i, j){
            return {
-                state: 0
+                state: 0,
+                i: i,
+                j: j
            };
     };
 
@@ -25,24 +28,140 @@ app.factory('Tiles', [function(){
 
     tiles.color = function(tile){ return scale(tile.state) };
 
+    tiles.increment = function(tile){
+        tile.state ++;
+    };
+
+    tiles.decrement = function(tile){
+        tile.state = Math.max(0, tile.state - 1);
+    };
+
+    tiles.reset = function(tile){
+        tile.state = 0;
+    };
+
     return tiles;
 
-}])
+}]);
 
-app.controller('GameController', ['$scope', 'Tiles', function($scope, Tiles){
+app.factory('TileFactory', ['Tiles', function(Tiles){
+
+    var makeTiles = function(n){
+
+        tiles = [];
+
+        for(var i = 0; i < n; i++){
+            var row = [];
+            for(var j = 0; j < n; j++){
+                row.push(Tiles.generate(i, j));
+            }
+            tiles.push(row);
+        };
+
+        tiles.forEach = function(action){
+            for(var i = 0; i < n; i++){
+                for(var j = 0; j < n; j++){
+                    action(tiles[i][j]);
+                }
+            }
+        };
+
+        tiles.available = function(){
+            var av = [];
+            tiles.forEach(function(tile){
+                if(tile.state == 0) av.push([tile.i, tile.j]);
+            });
+            return av;
+        };
+
+        tiles.resetRow = function(i){
+            for(var j = 0; j < n; j++){
+                Tiles.reset(tiles[i][j]);
+            }
+        };
+
+        tiles.resetColumn = function(j){
+            for(var i = 0; i < n; i++){
+                Tiles.reset(tiles[i][j]);
+            }
+        };
+
+        tiles.popup = function(indices){
+            for(var i = 0; i < indices.length; i++){
+                tiles.increment(indices[i][0], indices[i][1]);
+            }
+        }
+
+        tiles.bomb = function(i, j){
+            var minI = i == 0 ? 0 : (i - 1);
+            var minJ = j == 0 ? 0 : (j - 1);;
+            var maxI = i == (n - 1) ? (n - 1) : (i + 1);
+            var max = j == (n - 1) ? (n - 1) : (j + 1);
+            for(var i = minI; i <= maxI; i++){
+                for(var j = minJ; j <= maxJ; j++){
+                    Tiles.reset(tiles[i][j]);
+                }
+            }
+        };
+
+        tiles.increment = function(i, j){
+            Tiles.increment(tiles[i][j]);
+        }
+
+        tiles.incrementActive = function(){
+            tiles.forEach(function(tile){
+                if(tile.state > 0){
+                    Tiles.increment(tile);
+                }
+            })
+        }
+
+        return tiles;
+
+    }
+
+    return makeTiles;
+
+}]);
+
+app.factory('GameState', [function(){
+
+    var cooldowns = 5;
+
+    var rounds = 0;
+
+    var state = {};
+
+    state.rounds = 0;
+
+    state.bombCDR = 0;
+    state.crossCDR = 0;
+    state.numberCDR = 0;
+    state.decrementCooldown = 0;
+
+    state.next = function(){
+        bombCDR = Math.max(0, bombCDR - 1);
+        crossCDR = Math.max(0, crossCDR - 1);
+        numberCDR = Math.max(0, numberCDR - 1);
+        decrementCooldown = Math.max(0, decrementCooldown - 1);
+    };
+
+    state.useBomb = function(){
+
+    }
+
+    return state;
+
+}]);
+
+app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
+    function($scope, Tiles, TileFactory, GameState){
 
     var n = 5;
     $scope.n = n;
 
-    var tiles = [];
+    var tiles = TileFactory(n);
     $scope.tiles = tiles;
-    for(var i = 0; i < n; i++){
-        var tileRow = [];
-        for(var j = 0; j < n; j++){
-            tileRow.push(Tiles.generate());
-        }
-        tiles.push(tileRow);
-    }
 
     console.debug($scope.tiles);
 
@@ -55,73 +174,36 @@ app.controller('GameController', ['$scope', 'Tiles', function($scope, Tiles){
         tiles[i][j].state = 0;
     };
 
-    $scope.launchRow = function(i){ round(function(){
-            for(var j = 0; j < n; j++){
-                decrement(i, j);
-            }
-        });
-    };
+    $scope.launchRow = function(i){
+        round(function(){ tiles.resetRow(i);});
+    }
 
-    $scope.launchColumn = function(j){ round(function(){
-            for(var i = 0; i < n ; i++){
-                decrement(i, j);
-            }
-        });
-    };
-
-    var incrementAll = function(){
-        for(var i = 0; i < n; i++){
-            for(var j = 0; j < n; j++){
-                if(tiles[i][j].state > 0){
-                    tiles[i][j].state++;
-                }
-
-            }
-        }
+    $scope.launchColumn = function(i){
+        round(function(){ tiles.resetColumn(i);});
     };
 
     var nPopup = 2;
-
-    var computeAvailable = function(){
-        var available = [];
-        for(var i = 0; i < n; i++){
-            for(var j = 0; j < n; j++){
-                if(tiles[i][j].state == 0){
-                    available.push([i, j]);
-                }
-
-            }
-        }
-        return available;
-    };
-
-    var popup = function(available){
-        var nPop = Math.min(nPopup, available.length);
-        shuffle(available);
-        for(var i = 0; i < nPop; i++){
-            tiles[available[i][0]][available[i][1]].state = 1;
-        }
-    };
+    var nPopupInit = 5;
 
     var round = function(action){
-        var available = computeAvailable();
+        var available = shuffled(tiles.available());
         action();
-        incrementAll();
-        popup(available);
+        tiles.incrementActive();
+        tiles.popup(available.slice(0, Math.min(available.length, nPopup)));
+        checkState();
     };
 
     var checkState = function(){
-        for(var i = 0; i < n; i++){
-            for(var j = 0; j < n; j++){
-                if(tiles[i][j].state >= Tiles.maxState){
-                    $scope.gameState = 'LOST';
-                    return;
-                }
+
+        tiles.forEach(function(tile){
+            if(tile.state >= Tiles.maxState){
+                $scope.gameState = 'LOST';
+                return;
             }
-        }
+        });
     }
 
-    popup(computeAvailable());
+    tiles.popup(shuffled(tiles.available()).slice(0, nPopupInit));
 
     $scope.gameState = 'PLAYING';
 

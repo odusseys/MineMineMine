@@ -40,11 +40,15 @@
 }
 
 .powerup {
-    padding-top: 20px;
+    padding-top: 10px;
     display: inline-block;
     width: 70px;
     height: 50px;
     text-align: center;
     cursor: pointer;
     border: 1px black solid;
+}
+
+.powerup:disabled {
+    background: red;
 }

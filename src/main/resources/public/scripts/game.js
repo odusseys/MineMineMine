@@ -116,6 +116,13 @@ app.factory('TileFactory', ['Tiles', function(Tiles){
             })
         }
 
+        tiles.decrementWithSameNumber = function(i, j){
+            var number = tiles[i][j].state;
+            tiles.forEach(function(tile){
+                if(tile.status == number) Tiles.decrement(tile);
+            });
+        };
+
         return tiles;
 
     }
@@ -137,18 +144,31 @@ app.factory('GameState', [function(){
     state.bombCDR = 0;
     state.crossCDR = 0;
     state.numberCDR = 0;
-    state.decrementCooldown = 0;
+    state.decrementCDR = 0;
 
     state.next = function(){
-        bombCDR = Math.max(0, bombCDR - 1);
-        crossCDR = Math.max(0, crossCDR - 1);
-        numberCDR = Math.max(0, numberCDR - 1);
-        decrementCooldown = Math.max(0, decrementCooldown - 1);
+        state.bombCDR = Math.max(0, state.bombCDR - 1);
+        state.crossCDR = Math.max(0, state.crossCDR - 1);
+        state.numberCDR = Math.max(0, state.numberCDR - 1);
+        state.decrementCDR = Math.max(0, state.decrementCDR - 1);
+        state.rounds++;
     };
 
     state.useBomb = function(){
+        state.bombCDR = cooldowns;
+    };
 
-    }
+    state.useCross = function(){
+        state.crossCDR = cooldowns;
+    };
+
+    state.useNumber = function(){
+        state.numberCDR = cooldowns;
+    };
+
+    state.useDecrement = function(){
+        state.decrementCDR = cooldowns;
+    };
 
     return state;
 
@@ -159,6 +179,9 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
 
     var n = 5;
     $scope.n = n;
+
+    var state = GameState;
+    $scope.state = state;
 
     var tiles = TileFactory(n);
     $scope.tiles = tiles;
@@ -182,6 +205,12 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
         round(function(){ tiles.resetColumn(i);});
     };
 
+    $scope.decrementAll = function(){
+        tiles.forEach(function(tile){Tiles.decrement(tile)});
+        state.next();
+        state.useDecrement();
+    }
+
     var nPopup = 2;
     var nPopupInit = 5;
 
@@ -190,6 +219,7 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
         action();
         tiles.incrementActive();
         tiles.popup(available.slice(0, Math.min(available.length, nPopup)));
+        state.next();
         checkState();
     };
 

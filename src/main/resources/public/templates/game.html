@@ -1,9 +1,12 @@
 <div ng-controller="GameController" style="display: inline-block">
     <div class="powerups">
-        <div class="powerup" ng-click="toggleBombMode()">BOMB</div>
-        <div class="powerup" ng-click="toggleCrossMode()">CROSS</div>
-        <div class="powerup" ng-click="toggleNumberMode()">NUMBER</div>
-        <div class="powerup" ng-click="decrementAll()">-1</div>
+        <button class="powerup" ng-click="toggleBombMode()">BOMB</button>
+        <button class="powerup" ng-click="toggleCrossMode()">CROSS</button>
+        <button class="powerup" ng-click="toggleNumberMode()">NUMBER</button>
+        <button class="powerup" ng-click="decrementAll()" ng-disabled="state.decrementCDR > 0">
+            <span ng-show="state.decrementCDR == 0">-1</span>
+            <span ng-show="state.decrementCDR > 0" style="color: white">{{state.decrementCDR}}</span>
+        </button>
     </div>
     <table>
         <thead>

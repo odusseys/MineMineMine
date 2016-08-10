@@ -13,6 +13,19 @@
     text-align: center;
 }
 
+.game-area {
+    margin: 0 auto;
+}
+
+.minefield {
+    float: left;
+}
+
+.game-info {
+    width: 150px;
+    float: left;
+}
+
 button:focus {
     outline: none;
 }
@@ -50,6 +63,11 @@ button:focus {
     width: 50px;
     text-align: center;
     box-shadow: 0px 0px 4px #F2F2F2;
+}
+
+.tile:hover {
+    -webkit-filter: brightness(0.8);
+    filter: brightness(0.8);
 }
 
 @-webkit-keyframes tile-pulse {

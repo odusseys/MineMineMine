@@ -24,7 +24,7 @@ app.factory('Tiles', [function(){
            };
     };
 
-    var scale = d3.scaleLinear().domain([0, tiles.maxState]).range(['white', 'red']); //should probably use css classes instead
+    var scale = d3.scaleLinear().domain([0, tiles.maxState]).range(['white', 'red']);
 
     tiles.color = function(tile){ return scale(tile.state) };
 
@@ -39,6 +39,11 @@ app.factory('Tiles', [function(){
     tiles.reset = function(tile){
         tile.state = 0;
     };
+
+    tiles.incrementMaxState = function(){
+        tiles.maxState++;
+        scale = d3.scaleLinear().domain([0, tiles.maxState]).range(['white', 'red']);
+    }
 
     return tiles;
 

@@ -1,36 +1,38 @@
 <div ng-controller="GameController" style="display: inline-block">
-    <div class="powerups">
-        <button class="powerup" ng-click="toggleBombMode()" ng-disabled="state.bombCDR > 0 || gameState == 'LOST' "
-            ng-class="{'powerup-toggled': toggleType=='BOMB'}">
+    <button ng-click="cheat()" ng-hide="true">CHEAT</button>
+    <div class="game-area">
+        <div class="minefield">
+
+            <div class="powerups">
+                <button class="powerup" ng-click="toggleBombMode()" ng-disabled="state.bombCDR > 0 || gameState == 'LOST' "
+                        ng-class="{'powerup-toggled': toggleType=='BOMB'}">
             <span ng-show="state.bombCDR == 0">
                 <i class="fa fa-bomb" aria-hidden="true"></i>
             </span>
-            <span ng-show="state.bombCDR > 0" style="color: white">{{state.bombCDR}}</span>
-        </button>
-        <button class="powerup" ng-click="toggleCrossMode()" ng-disabled="state.crossCDR > 0 || gameState == 'LOST' "
-                ng-class="{'powerup-toggled': toggleType=='CROSS'}">
+                    <span ng-show="state.bombCDR > 0" style="color: white">{{state.bombCDR}}</span>
+                </button>
+                <button class="powerup" ng-click="toggleCrossMode()" ng-disabled="state.crossCDR > 0 || gameState == 'LOST' "
+                        ng-class="{'powerup-toggled': toggleType=='CROSS'}">
             <span ng-show="state.crossCDR == 0">
                 <i class="fa fa-plus" aria-hidden="true"></i>
             </span>
-            <span ng-show="state.crossCDR > 0" style="color: white">{{state.crossCDR}}</span>
-        </button>
-        <button class="powerup" ng-click="toggleNumberMode()" ng-disabled="state.numberCDR > 0 || gameState == 'LOST' "
-                ng-class="{'powerup-toggled': toggleType=='NUMBER'}">
+                    <span ng-show="state.crossCDR > 0" style="color: white">{{state.crossCDR}}</span>
+                </button>
+                <button class="powerup" ng-click="toggleNumberMode()" ng-disabled="state.numberCDR > 0 || gameState == 'LOST' "
+                        ng-class="{'powerup-toggled': toggleType=='NUMBER'}">
             <span ng-show="state.numberCDR == 0">
                 <i class="fa fa-hashtag" aria-hidden="true"></i>
             </span>
-            <span ng-show="state.numberCDR > 0" style="color: white">{{state.numberCDR}}</span>
-        </button>
-        <button class="powerup" ng-click="decrementAll()" ng-disabled="state.decrementCDR > 0 || gameState == 'LOST' ">
+                    <span ng-show="state.numberCDR > 0" style="color: white">{{state.numberCDR}}</span>
+                </button>
+                <button class="powerup" ng-click="decrementAll()" ng-disabled="state.decrementCDR > 0 || gameState == 'LOST' ">
             <span ng-show="state.decrementCDR == 0">
                 <i class="fa fa-arrow-down" aria-hidden="true"></i>
             </span>
-            <span ng-show="state.decrementCDR > 0" style="color: white">{{state.decrementCDR}}</span>
-        </button>
-    </div>
-    <button ng-click="cheat()" ng-hide="true">CHEAT</button>
-    <div class="row" style="width: 500px">
-        <div class="col-md-9">
+                    <span ng-show="state.decrementCDR > 0" style="color: white">{{state.decrementCDR}}</span>
+                </button>
+            </div>
+
             <table ng-hide="gameState == 'LOST'">
                 <thead>
                 <tr>
@@ -38,7 +40,7 @@
                     <th ng-repeat="x in tiles" class="launchpad">
                         <button class="launch-button" ng-click="launchColumn($index)"
                              ng-mouseover="hoverLaunchColumn($index)" ng-mouseleave="clearHovers()"
-                            ng-enabled="gameState=='PLAYING'"></button>
+                            ng-disabled="gameState != 'PLAYING'"></button>
                     </th>
                 </tr>
                 </thead>
@@ -48,7 +50,7 @@
                         <div class="launchpad">
                             <button class="launch-button" ng-style="{}" ng-click="launchRow($index)"
                                ng-mouseover="hoverLaunchRow($index)" ng-mouseleave="clearHovers()"
-                               ng-enabled="gameState=='PLAYING'"></button>
+                               ng-disabled="gameState!='PLAYING'"></button>
                         </div>
                     </td>
 
@@ -74,7 +76,7 @@
                 <button ng-click="initGame()" class="retry-button">RETRY</button>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="game-info">
             <p ng-show="message">{{message}}</p>
             <h4>Level</h4>
             {{state.nPopup - 1}}

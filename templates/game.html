@@ -2,35 +2,63 @@
     <button ng-click="cheat()" ng-hide="true">CHEAT</button>
     <div class="game-area">
         <div class="minefield">
-
             <div class="powerups">
-                <button class="powerup" ng-click="toggleBombMode()" ng-disabled="state.bombCDR > 0 || gameState == 'LOST' "
-                        ng-class="{'powerup-toggled': toggleType=='BOMB'}">
+                <button class="powerup" ng-click="toggleBombMode()"
+                        ng-disabled="state.bombCDR > 0 || gameState == 'LOST' "
+                        ng-class="{'powerup-toggled': toggleType=='BOMB'}"
+                        ng-mouseover="powerupHover = 'BOMB'" ng-mouseout="powerupHover = null">
             <span ng-show="state.bombCDR == 0">
                 <i class="fa fa-bomb" aria-hidden="true"></i>
             </span>
                     <span ng-show="state.bombCDR > 0" style="color: white">{{state.bombCDR}}</span>
                 </button>
-                <button class="powerup" ng-click="toggleCrossMode()" ng-disabled="state.crossCDR > 0 || gameState == 'LOST' "
-                        ng-class="{'powerup-toggled': toggleType=='CROSS'}">
+                <button class="powerup" ng-click="toggleCrossMode()"
+                        ng-disabled="state.crossCDR > 0 || gameState == 'LOST' "
+                        ng-class="{'powerup-toggled': toggleType=='CROSS'}"
+                        ng-mouseover="powerupHover = 'CROSS'" ng-mouseout="powerupHover = null">
             <span ng-show="state.crossCDR == 0">
                 <i class="fa fa-plus" aria-hidden="true"></i>
             </span>
                     <span ng-show="state.crossCDR > 0" style="color: white">{{state.crossCDR}}</span>
                 </button>
-                <button class="powerup" ng-click="toggleNumberMode()" ng-disabled="state.numberCDR > 0 || gameState == 'LOST' "
-                        ng-class="{'powerup-toggled': toggleType=='NUMBER'}">
+                <button class="powerup" ng-click="toggleNumberMode()"
+                        ng-disabled="state.numberCDR > 0 || gameState == 'LOST' "
+                        ng-class="{'powerup-toggled': toggleType=='NUMBER'}"
+                        ng-mouseover="powerupHover = 'NUMBER'" ng-mouseout="powerupHover = null">
             <span ng-show="state.numberCDR == 0">
                 <i class="fa fa-hashtag" aria-hidden="true"></i>
             </span>
                     <span ng-show="state.numberCDR > 0" style="color: white">{{state.numberCDR}}</span>
                 </button>
-                <button class="powerup" ng-click="decrementAll()" ng-disabled="state.decrementCDR > 0 || gameState == 'LOST' ">
+                <button class="powerup" ng-click="decrementAll()"
+                        ng-disabled="state.decrementCDR > 0 || gameState == 'LOST' "
+                        ng-mouseover="powerupHover = 'DECREMENT'" ng-mouseout="powerupHover = null">
             <span ng-show="state.decrementCDR == 0">
                 <i class="fa fa-arrow-down" aria-hidden="true"></i>
             </span>
                     <span ng-show="state.decrementCDR > 0" style="color: white">{{state.decrementCDR}}</span>
                 </button>
+
+                <div class="powerup-descriptions">
+                    <div ng-switch="powerupHover">
+                        <div ng-switch-when="BOMB">
+                            Destroy a mine and its surroundings.
+                        </div>
+                        <div ng-switch-when="CROSS">
+                            Destroy a line and row simultaneously.
+                        </div>
+                        <div ng-switch-when="NUMBER">
+                            Destroy all mines with the same number.
+                        </div>
+                        <div ng-switch-when="DECREMENT">
+                            Reduce the timer on each mine by 1.
+                        </div>
+                        <div ng-switch-default>
+                            <strong>Powerups</strong>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <table ng-hide="gameState == 'LOST'">
@@ -39,8 +67,9 @@
                     <th></th>
                     <th ng-repeat="x in tiles" class="launchpad">
                         <button class="launch-button" ng-click="launchColumn($index)"
-                             ng-mouseover="hoverLaunchColumn($index)" ng-mouseleave="clearHovers()"
-                            ng-disabled="gameState != 'PLAYING'"></button>
+                                ng-mouseover="hoverLaunchColumn($index)" ng-mouseleave="clearHovers()"
+                                ng-disabled="gameState != 'PLAYING'"
+                                ng-class="{'launch-button-highlighted': highlightLaunchers}"></button>
                     </th>
                 </tr>
                 </thead>
@@ -49,12 +78,13 @@
                     <td>
                         <div class="launchpad">
                             <button class="launch-button" ng-style="{}" ng-click="launchRow($index)"
-                               ng-mouseover="hoverLaunchRow($index)" ng-mouseleave="clearHovers()"
-                               ng-disabled="gameState!='PLAYING'"></button>
+                                    ng-mouseover="hoverLaunchRow($index)" ng-mouseleave="clearHovers()"
+                                    ng-disabled="gameState!='PLAYING'"
+                                    ng-class="{'launch-button-highlighted': highlightLaunchers}"></button>
                         </div>
                     </td>
 
-                    <td ng-repeat="tile in tileRow" >
+                    <td ng-repeat="tile in tileRow">
                         <div class="tile-container">
                             <div class="tile"
                                  ng-style="{'background-color': tileColor(tile)}"
@@ -72,16 +102,21 @@
                 </tbody>
             </table>
             <div ng-show="gameState=='LOST'">
-                <div id="you-lose" >YOU LOSE</div>
+                <div id="you-lose">YOU LOSE</div>
                 <button ng-click="initGame()" class="retry-button">RETRY</button>
             </div>
         </div>
         <div class="game-info">
-            <p ng-show="message">{{message}}</p>
-            <h4>Level</h4>
-            {{state.nPopup - 1}}
-            <h4>Score</h4>
-            {{state.score}}
+
+            <div class="message-box">
+                <p ng-show="message">{{message}}</p>
+            </div>
+            <div class="statistics">
+                <h3>Level</h3>
+                {{state.nPopup - 1}}
+                <h3>Score</h3>
+                {{state.score}}
+            </div>
         </div>
     </div>
 </div>

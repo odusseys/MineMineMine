@@ -340,7 +340,9 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
         tiles.popup(shuffled(tiles.available()).slice(0, nPopupInit));
         $scope.gameState = 'PLAYING';
         $scope.toggleType = null;
-        $scope.message = null;
+        $scope.message = "Click on a blue launcher to destroy the mines !";
+        $scope.powerupHover = null;
+        $scope.highlightLaunchers = true;
     }
 
     $scope.initGame();
@@ -355,6 +357,7 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
     };
 
     $scope.launchRow = function(i){
+        $scope.highlightLaunchers = false;
         round(function(){
             var score = tiles.resetRow(i);
             state.addRawScore(score);
@@ -362,6 +365,7 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
     }
 
     $scope.launchColumn = function(i){
+        $scope.highlightLaunchers = false;
         round(function(){
             var score = tiles.resetColumn(i);
             state.addRawScore(score);
@@ -490,8 +494,6 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
             tile.highlighted = false;
         });
     };
-
-    $scope.message = null;
 
     $scope.cheat = function(){
         round(function(){

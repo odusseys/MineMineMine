@@ -26,6 +26,14 @@
     float: left;
 }
 
+.message-box {
+    height: 100px;
+}
+
+.statistics {
+    margin-top: 20px;
+}
+
 button:focus {
     outline: none;
 }
@@ -46,9 +54,20 @@ button:focus {
     cursor: pointer;
 }
 
+.launch-button-highlighted {
+    -webkit-animation-name: tile-pulse;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-iteration-count: infinite;
+}
+
 .launch-button:hover {
     -webkit-filter: brightness(0.8);
     filter: brightness(0.8);
+}
+
+.launch-button:disabled {
+    -webkit-animation: 0;
+    opacity: 0.4;
 }
 
 .tile-container {
@@ -72,7 +91,7 @@ button:focus {
 
 @-webkit-keyframes tile-pulse {
     0% { opacity: 1.0; }
-    50% { opacity: 0.5; }
+    50% { opacity: 0.4; }
     100% { opacity: 1.0; }
 }
 
@@ -106,6 +125,10 @@ i {
 
 .powerups {
     margin-bottom: 50px;
+}
+
+.powerup-descriptions {
+    margin-top: 5px;
 }
 
 .powerup {

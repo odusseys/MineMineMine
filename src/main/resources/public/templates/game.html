@@ -1,19 +1,27 @@
 <div ng-controller="GameController" style="display: inline-block">
     <div class="powerups">
         <button class="powerup" ng-click="toggleBombMode()" ng-disabled="state.bombCDR > 0 || gameState == 'LOST' ">
-            <span ng-show="state.bombCDR == 0">BOMB</span>
+            <span ng-show="state.bombCDR == 0">
+                <i class="fa fa-bomb" aria-hidden="true"></i>
+            </span>
             <span ng-show="state.bombCDR > 0" style="color: white">{{state.bombCDR}}</span>
         </button>
         <button class="powerup" ng-click="toggleCrossMode()" ng-disabled="state.crossCDR > 0 || gameState == 'LOST' ">
-            <span ng-show="state.crossCDR == 0">CROSS</span>
+            <span ng-show="state.crossCDR == 0">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+            </span>
             <span ng-show="state.crossCDR > 0" style="color: white">{{state.crossCDR}}</span>
         </button>
         <button class="powerup" ng-click="toggleNumberMode()" ng-disabled="state.numberCDR > 0 || gameState == 'LOST' ">
-            <span ng-show="state.numberCDR == 0">NUMBER</span>
+            <span ng-show="state.numberCDR == 0">
+                <i class="fa fa-hashtag" aria-hidden="true"></i>
+            </span>
             <span ng-show="state.numberCDR > 0" style="color: white">{{state.numberCDR}}</span>
         </button>
         <button class="powerup" ng-click="decrementAll()" ng-disabled="state.decrementCDR > 0 || gameState == 'LOST' ">
-            <span ng-show="state.decrementCDR == 0">-1</span>
+            <span ng-show="state.decrementCDR == 0">
+                <i class="fa fa-arrow-down" aria-hidden="true"></i>
+            </span>
             <span ng-show="state.decrementCDR > 0" style="color: white">{{state.decrementCDR}}</span>
         </button>
     </div>
@@ -24,20 +32,24 @@
                 <tr>
                     <th></th>
                     <th ng-repeat="x in tiles" class="launchpad">
-                        <div class="launch-button" ng-click="launchColumn($index)"></div>
+                        <div class="launch-button" ng-click="launchColumn($index)"
+                             ng-mouseover="hoverLaunchColumn($index)" ng-mouseleave="clearHovers()"></div>
                     </th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="tileRow in tiles">
                     <td class="launchpad">
-                        <div class="launch-button" ng-style="{}" ng-click="launchRow($index)"></div>
+                        <div class="launch-button" ng-style="{}" ng-click="launchRow($index)"
+                             ng-mouseover="hoverLaunchRow($index)" ng-mouseleave="clearHovers()"></div>
                     </td>
                     <td ng-repeat="tile in tileRow" class="tile"
                         ng-style="{'background-color': tileColor(tile)}"
                         ng-click="clickTile(tile)"
-                        ng-class="{'clickable-tile': gameState == 'TOGGLED'}">
-                        {{tile.state}}
+                        ng-mouseover="hoverTile(tile)"
+                        ng-mouseleave="clearHovers()"
+                        ng-class="{'clickable-tile': gameState == 'TOGGLED', 'highlighted-tile': tile.highlighted}">
+                        {{tile.state==0?"":tile.state}}
                     </td>
                 </tr>
                 </tbody>

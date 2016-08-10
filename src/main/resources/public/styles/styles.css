@@ -39,13 +39,29 @@
     text-align: center;
 }
 
+@-webkit-keyframes tile-pulse {
+    0% { opacity: 1.0; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1.0; }
+}
+
+i {
+    font-size: 300%;
+}
 
 .clickable-tile {
-    border: 1px black solid;
     cursor: pointer;
+    -webkit-animation-name: tile-pulse;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-iteration-count: infinite;
 }
 
 .clickable-tile:hover {
+    -webkit-filter: brightness(0.8);
+    filter: brightness(0.8);
+}
+
+.highlighted-tile {
     -webkit-filter: brightness(0.8);
     filter: brightness(0.8);
 }
@@ -67,6 +83,13 @@
 .powerup:hover {
     -webkit-filter: brightness(0.8);
     filter: brightness(0.8);
+    color: white;
+}
+
+.powerup:focus {
+    -webkit-filter: brightness(0.5);
+    filter: brightness(0.5);
+    color: white;
 }
 
 .powerup:disabled {

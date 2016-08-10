@@ -148,6 +148,52 @@ app.factory('TileFactory', ['Tiles', function(Tiles){
             return score;
         }
 
+        tiles.allClear = function(){
+            var allClear = true;
+            tiles.forEach(function(tile){
+                allClear = allClear && tile.state == 0;
+            });
+            return allClear;
+        };
+
+        tiles.highlightBomb = function(i, j){
+            var minI = i == 0 ? 0 : (i - 1);
+            var minJ = j == 0 ? 0 : (j - 1);;
+            var maxI = i == (n - 1) ? (n - 1) : (i + 1);
+            var maxJ = j == (n - 1) ? (n - 1) : (j + 1);
+            for(var i = minI; i <= maxI; i++){
+                for(var j = minJ; j <= maxJ; j++){
+                    tiles[i][j].highlighted = true;
+                }
+            }
+        };
+
+        tiles.highlightRow = function(i){
+            for(var j = 0; j < n; j++){
+                tiles[i][j].highlighted = true;
+            }
+        };
+
+        tiles.highlightColumn = function(j){
+            for(var i = 0; i < n; i++){
+                tiles[i][j].highlighted = true;
+            }
+        };
+
+        tiles.highlightCross = function(i, j){
+            tiles.highlightRow(i);
+            tiles.highlightColumn(j);
+        };
+
+        tiles.highlightNumber = function(i, j){
+            var number = tiles[i][j].state;
+            tiles.forEach(function(tile){
+                if(tile.state == number){
+                    tile.highlighted = true;
+                }
+            });
+        }
+
         return tiles;
 
     }
@@ -254,6 +300,7 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
         var score = tiles.decrementAll();
         state.addRawScore(score);
         state.useDecrement();
+        checkAllClear();
         state.next();
         $scope.gameState = 'PLAYING';
     }
@@ -305,6 +352,7 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
                 }
                 state.addRawScore(score);
             });
+            $scope.clearHovers();
             $scope.gameState = 'PLAYING';
             $scope.message = "";
         }
@@ -312,11 +360,19 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
 
     var nPopupInit = 5;
 
-    var round = function(action){
+    var checkAllClear = function(){
+        if(tiles.allClear()){
+            $scope.message = "Cleared the board ! Bonus points !";
+            state.addRawScore(10);
+        }
+    };
+
+    var round = function(action, popup){
         var available = shuffled(tiles.available());
         action();
+        $scope.message = null;
+        checkAllClear();
         tiles.incrementActive();
-        console.debug(state.nPopup);
         tiles.popup(available.slice(0, Math.min(available.length, state.nPopup)));
         state.next();
         checkState();
@@ -335,6 +391,32 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
     tiles.popup(shuffled(tiles.available()).slice(0, nPopupInit));
 
     $scope.gameState = 'PLAYING';
+
+    $scope.hoverLaunchColumn = function(j){
+        tiles.highlightColumn(j);
+    };
+
+    $scope.hoverLaunchRow = function(i){
+        tiles.highlightRow(i);
+    }
+
+    $scope.hoverTile = function(tile){
+        if($scope.gameState == 'TOGGLED'){
+            if(toggleType == 'CROSS'){
+                tiles.highlightCross(tile.i, tile.j);
+            } else if(toggleType == 'BOMB'){
+                tiles.highlightBomb(tile.i, tile.j);
+            } else if(toggleType == 'NUMBER'){
+                tiles.highlightNumber(tile.i, tile.j);
+            }
+        }
+    };
+
+    $scope.clearHovers = function(){
+        tiles.forEach(function(tile){
+            tile.highlighted = false;
+        });
+    };
 
     $scope.message = null;
 

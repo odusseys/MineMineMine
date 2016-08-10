@@ -258,72 +258,87 @@ app.factory('TileFactory', ['Tiles', function(Tiles){
 
 app.factory('GameState', [function(){
 
-    var cooldowns = 5;
+    return function(){
 
-    var state = {};
+        var cooldowns = 5;
 
-    state.nPopup = 2;
+        var state = {};
 
-    var levelupInterval = 10;
+        state.nPopup = 2;
 
-    state.score = 0;
+        var levelupInterval = 10;
+        state.growInterval = 20;
 
-    var scoreMultiplier = 1;
+        state.score = 0;
 
-    state.rounds = 0;
+        var scoreMultiplier = 1;
 
-    state.bombCDR = 0;
-    state.crossCDR = 0;
-    state.numberCDR = 0;
-    state.decrementCDR = 0;
+        state.rounds = 0;
 
-    state.next = function(){
-        state.bombCDR = Math.max(0, state.bombCDR - 1);
-        state.crossCDR = Math.max(0, state.crossCDR - 1);
-        state.numberCDR = Math.max(0, state.numberCDR - 1);
-        state.decrementCDR = Math.max(0, state.decrementCDR - 1);
-        state.rounds++;
-        if(state.rounds % levelupInterval == 0){
-            state.nPopup ++;
-        }
+        state.bombCDR = 0;
+        state.crossCDR = 0;
+        state.numberCDR = 0;
+        state.decrementCDR = 0;
+
+        state.next = function(){
+            state.bombCDR = Math.max(0, state.bombCDR - 1);
+            state.crossCDR = Math.max(0, state.crossCDR - 1);
+            state.numberCDR = Math.max(0, state.numberCDR - 1);
+            state.decrementCDR = Math.max(0, state.decrementCDR - 1);
+            state.rounds++;
+            if(state.rounds % levelupInterval == 0){
+                state.nPopup ++;
+            }
+        };
+
+        //always cooldown + 1 because cooldown is immediately decreased after action
+        state.useBomb = function(){
+            state.bombCDR = cooldowns + 1;
+        };
+
+        state.useCross = function(){
+            state.crossCDR = cooldowns + 1;
+        };
+
+        state.useNumber = function(){
+            state.numberCDR = cooldowns + 1;
+        };
+
+        state.useDecrement = function(){
+            state.decrementCDR = cooldowns + 1;
+        };
+
+        state.addRawScore = function(s){
+            state.score += scoreMultiplier * s;
+        };
+
+        return state;
     };
-
-    //always cooldown + 1 because cooldown is immediately decreased after action
-    state.useBomb = function(){
-        state.bombCDR = cooldowns + 1;
-    };
-
-    state.useCross = function(){
-        state.crossCDR = cooldowns + 1;
-    };
-
-    state.useNumber = function(){
-        state.numberCDR = cooldowns + 1;
-    };
-
-    state.useDecrement = function(){
-        state.decrementCDR = cooldowns + 1;
-    };
-
-    state.addRawScore = function(s){
-        state.score += scoreMultiplier * s;
-    };
-
-    return state;
 
 }]);
 
 app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
     function($scope, Tiles, TileFactory, GameState){
 
-    var n = 5;
-    $scope.n = n;
+    var n = 6   ;
+    var state = null;
+    var tiles = null;
 
-    var state = GameState;
-    $scope.state = state;
+    var nPopupInit = 5;
 
-    var tiles = TileFactory(n);
-    $scope.tiles = tiles;
+    $scope.initGame = function(){
+        tiles = TileFactory(n);
+        state = GameState();
+        $scope.tiles = tiles;
+        $scope.state = state;
+
+        tiles.popup(shuffled(tiles.available()).slice(0, nPopupInit));
+        $scope.gameState = 'PLAYING';
+        $scope.toggleType = null;
+        $scope.message = null;
+    }
+
+    $scope.initGame();
 
     $scope.tileColor = function(tile){
         return Tiles.color(tile);
@@ -356,8 +371,6 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
         state.next();
         $scope.gameState = 'PLAYING';
     }
-
-    $scope.toggleType = null;
 
     var toggleWithType = function(type, message){
         if($scope.gameState == 'TOGGLED'){
@@ -412,8 +425,6 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
         }
     };
 
-    var nPopupInit = 5;
-
     var checkAllClear = function(){
         if(tiles.allClear()){
             $scope.message = "Cleared the board ! Bonus points !";
@@ -433,8 +444,9 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
             tiles.shuffle();
         }
         checkState();
-        if(state.nPopup > tiles.length){
+        if(state.rounds % state.growInterval == 0){
             tiles.grow();
+            $scope.message = "The minefield grew ! Damn !";
         }
     };
 
@@ -446,10 +458,6 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
             }
         });
     }
-
-    tiles.popup(shuffled(tiles.available()).slice(0, nPopupInit));
-
-    $scope.gameState = 'PLAYING';
 
     $scope.hoverLaunchColumn = function(j){
         tiles.highlightColumn(j);

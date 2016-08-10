@@ -56,6 +56,12 @@ i {
     -webkit-animation-iteration-count: infinite;
 }
 
+.exploding-tile {
+    -webkit-animation-name: tile-pulse;
+    -webkit-animation-duration: 0.5s;
+    -webkit-animation-iteration-count: infinite;
+}
+
 .clickable-tile:hover {
     -webkit-filter: brightness(0.8);
     filter: brightness(0.8);
@@ -99,10 +105,24 @@ i {
 
 .powerup:disabled {
     background: red;
+    -webkit-animation-name: tile-pulse;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
 }
 
 #you-lose {
     color: red;
     font-weight: bold;
     font-size: 300%;
+}
+
+.retry-button {
+    padding: 5px;
+    border: 1px black solid;
+    background: white;
+}
+
+.retry-button:hover {
+    -webkit-filter: brightness(0.8);
+    filter: brightness(0.8);
 }

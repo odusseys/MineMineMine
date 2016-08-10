@@ -13,30 +13,43 @@
     text-align: center;
 }
 
+button:focus {
+    outline: none;
+}
+
 .launchpad {
     text-align: center;
     width: 50px;
     height: 50px;
 }
 
-.launchpad:hover {
+.launch-button {
+    background-color: #54ccff;
+    width: 35px;
+    height: 35px;
+    border: 0px;
+    box-shadow: 1px 1px #888888;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+.launch-button:hover {
     -webkit-filter: brightness(0.8);
     filter: brightness(0.8);
 }
 
-.launch-button {
-    background-color: #54ccff;
-    width: 30px;
-    height: 30px;
-    border: 1px black solid;
-    margin: 0 auto;
-    cursor: pointer;
+.tile-container {
+    height: 55px;
+    width: 55px;
+    line-height: 52px;
+    background: white;
 }
 
 .tile {
     height: 50px;
     width: 50px;
     text-align: center;
+    box-shadow: 0px 0px 4px #F2F2F2;
 }
 
 @-webkit-keyframes tile-pulse {
@@ -70,6 +83,7 @@ i {
 .highlighted-tile {
     -webkit-filter: brightness(0.8);
     filter: brightness(0.8);
+    -webkit-animation: 0;
 }
 
 .powerups {
@@ -77,25 +91,25 @@ i {
 }
 
 .powerup {
-    padding-top: 10px;
+    padding-top: 5px;
     display: inline-block;
     width: 70px;
     height: 50px;
     text-align: center;
     cursor: pointer;
-    border: 1px black solid;
+    background: #f7f7f7;
+    border: 0px;
+    box-shadow: 1px 1px #888888;
 }
 
 .powerup:hover {
     -webkit-filter: brightness(0.8);
     filter: brightness(0.8);
-    color: white;
 }
 
 .powerup-toggled {
     -webkit-filter: brightness(0.5);
     filter: brightness(0.5);
-    color: white;
 }
 
 .powerup-toggled:hover {
@@ -108,6 +122,7 @@ i {
     -webkit-animation-name: tile-pulse;
     -webkit-animation-duration: 2s;
     -webkit-animation-iteration-count: infinite;
+    font-weight: bold;
 }
 
 #you-lose {

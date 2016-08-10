@@ -44,20 +44,27 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="tileRow in tiles">
-                    <td class="launchpad">
-                        <button class="launch-button" ng-style="{}" ng-click="launchRow($index)"
-                             ng-mouseover="hoverLaunchRow($index)" ng-mouseleave="clearHovers()"
-                                ng-enabled="gameState=='PLAYING'"></button>
+                    <td>
+                        <div class="launchpad">
+                            <button class="launch-button" ng-style="{}" ng-click="launchRow($index)"
+                               ng-mouseover="hoverLaunchRow($index)" ng-mouseleave="clearHovers()"
+                               ng-enabled="gameState=='PLAYING'"></button>
+                        </div>
                     </td>
-                    <td ng-repeat="tile in tileRow" class="tile"
-                        ng-style="{'background-color': tileColor(tile)}"
-                        ng-click="clickTile(tile)"
-                        ng-mouseover="hoverTile(tile)"
-                        ng-mouseleave="clearHovers()"
-                        ng-class="{'clickable-tile': gameState == 'TOGGLED',
-                                    'highlighted-tile': tile.highlighted,
-                                    'exploding-tile': tile.state==4}">
-                        {{tile.state==0?"":tile.state}}
+
+                    <td ng-repeat="tile in tileRow" >
+                        <div class="tile-container">
+                            <div class="tile"
+                                 ng-style="{'background-color': tileColor(tile)}"
+                                 ng-click="clickTile(tile)"
+                                 ng-mouseover="hoverTile(tile)"
+                                 ng-mouseleave="clearHovers()"
+                                 ng-class="{'clickable-tile': gameState == 'TOGGLED',
+                                        'highlighted-tile': tile.highlighted,
+                                        'exploding-tile': tile.state==4}">
+                                {{tile.state==0?"":tile.state}}
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 </tbody>

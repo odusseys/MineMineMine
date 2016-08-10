@@ -370,6 +370,7 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
         checkAllClear();
         state.next();
         $scope.gameState = 'PLAYING';
+        $scope.toggleType = null;
     }
 
     var toggleWithType = function(type, message){

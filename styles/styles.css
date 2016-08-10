@@ -55,9 +55,12 @@ button:focus {
 }
 
 .launch-button-highlighted {
-    -webkit-animation-name: tile-pulse;
+    -webkit-animation-name: -webkit-tile-pulse;
     -webkit-animation-duration: 1s;
     -webkit-animation-iteration-count: infinite;
+    animation-name: tile-pulse;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
 }
 
 .launch-button:hover {
@@ -89,7 +92,13 @@ button:focus {
     filter: brightness(0.8);
 }
 
-@-webkit-keyframes tile-pulse {
+@-webkit-keyframes -webkit-tile-pulse {
+    0% { opacity: 1.0; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1.0; }
+}
+
+@keyframes tile-pulse {
     0% { opacity: 1.0; }
     50% { opacity: 0.4; }
     100% { opacity: 1.0; }
@@ -101,15 +110,21 @@ i {
 
 .clickable-tile {
     cursor: pointer;
-    -webkit-animation-name: tile-pulse;
+    -webkit-animation-name: -webkit-tile-pulse;
     -webkit-animation-duration: 1s;
     -webkit-animation-iteration-count: infinite;
+    animation-name: tile-pulse;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
 }
 
 .exploding-tile {
-    -webkit-animation-name: tile-pulse;
+    -webkit-animation-name: -webkit-tile-pulse;
     -webkit-animation-duration: 0.5s;
     -webkit-animation-iteration-count: infinite;
+    animation-name: tile-pulse;
+    animation-duration: 0.5s;
+    animation-iteration-count: infinite;
 }
 
 .clickable-tile:hover {
@@ -121,6 +136,7 @@ i {
     -webkit-filter: brightness(0.8);
     filter: brightness(0.8);
     -webkit-animation: 0;
+    animation: 0;
 }
 
 .powerups {
@@ -160,9 +176,12 @@ i {
 
 .powerup:disabled {
     background: red;
-    -webkit-animation-name: tile-pulse;
+    -webkit-animation-name: -webkit-tile-pulse;
     -webkit-animation-duration: 2s;
     -webkit-animation-iteration-count: infinite;
+    animation-name: tile-pulse;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
     font-weight: bold;
 }
 

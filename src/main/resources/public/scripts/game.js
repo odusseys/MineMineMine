@@ -75,15 +75,21 @@ app.factory('TileFactory', ['Tiles', function(Tiles){
         };
 
         tiles.resetRow = function(i){
+            var score = 0;
             for(var j = 0; j < n; j++){
+                score += tiles[i][j].state;
                 Tiles.reset(tiles[i][j]);
             }
+            return score;
         };
 
         tiles.resetColumn = function(j){
+            var score = 0;
             for(var i = 0; i < n; i++){
+                score += tiles[i][j].state;
                 Tiles.reset(tiles[i][j]);
             }
+            return score;
         };
 
         tiles.popup = function(indices){
@@ -96,12 +102,15 @@ app.factory('TileFactory', ['Tiles', function(Tiles){
             var minI = i == 0 ? 0 : (i - 1);
             var minJ = j == 0 ? 0 : (j - 1);;
             var maxI = i == (n - 1) ? (n - 1) : (i + 1);
-            var max = j == (n - 1) ? (n - 1) : (j + 1);
+            var maxJ = j == (n - 1) ? (n - 1) : (j + 1);
+            var score = 0;
             for(var i = minI; i <= maxI; i++){
                 for(var j = minJ; j <= maxJ; j++){
+                    score += tiles[i][j].state;
                     Tiles.reset(tiles[i][j]);
                 }
             }
+            return score;
         };
 
         tiles.increment = function(i, j){
@@ -117,11 +126,27 @@ app.factory('TileFactory', ['Tiles', function(Tiles){
         }
 
         tiles.resetAllWithSameNumber = function(i, j){
+            var score = 0;
             var number = tiles[i][j].state;
             tiles.forEach(function(tile){
-                if(tile.status == number) Tiles.reset(tile);
+                if(tile.state == number){
+                    Tiles.reset(tile);
+                    score += number;
+                }
             });
+            return score;
         };
+
+        tiles.decrementAll = function(){
+            var score = 0;
+            tiles.forEach(function(tile){
+              if(tile.state > 0){
+                score++;
+                Tiles.decrement(tile);
+              }
+            });
+            return score;
+        }
 
         return tiles;
 
@@ -133,11 +158,17 @@ app.factory('TileFactory', ['Tiles', function(Tiles){
 
 app.factory('GameState', [function(){
 
-    var cooldowns = 5;
-
-    var rounds = 0;
+    var cooldowns = 10;
 
     var state = {};
+
+    state.nPopup = 2;
+
+    var levelupInterval = 10;
+
+    state.score = 0;
+
+    var scoreMultiplier = 1;
 
     state.rounds = 0;
 
@@ -152,22 +183,30 @@ app.factory('GameState', [function(){
         state.numberCDR = Math.max(0, state.numberCDR - 1);
         state.decrementCDR = Math.max(0, state.decrementCDR - 1);
         state.rounds++;
+        if(state.rounds % levelupInterval == 0){
+            state.nPopup ++;
+        }
     };
 
+    //always cooldown + 1 because cooldown is immediately decreased after action
     state.useBomb = function(){
-        state.bombCDR = cooldowns;
+        state.bombCDR = cooldowns + 1;
     };
 
     state.useCross = function(){
-        state.crossCDR = cooldowns;
+        state.crossCDR = cooldowns + 1;
     };
 
     state.useNumber = function(){
-        state.numberCDR = cooldowns;
+        state.numberCDR = cooldowns + 1;
     };
 
     state.useDecrement = function(){
-        state.decrementCDR = cooldowns;
+        state.decrementCDR = cooldowns + 1;
+    };
+
+    state.addRawScore = function(s){
+        state.score += scoreMultiplier * s;
     };
 
     return state;
@@ -198,17 +237,24 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
     };
 
     $scope.launchRow = function(i){
-        round(function(){ tiles.resetRow(i);});
+        round(function(){
+            var score = tiles.resetRow(i);
+            state.addRawScore(score);
+        });
     }
 
     $scope.launchColumn = function(i){
-        round(function(){ tiles.resetColumn(i);});
+        round(function(){
+            var score = tiles.resetColumn(i);
+            state.addRawScore(score);
+        });
     };
 
     $scope.decrementAll = function(){
-        tiles.forEach(function(tile){Tiles.decrement(tile)});
-        state.next();
+        var score = tiles.decrementAll();
+        state.addRawScore(score);
         state.useDecrement();
+        state.next();
     }
 
     var toggleType = null;
@@ -237,30 +283,32 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
     $scope.clickTile = function(tile){
         if($scope.gameState == 'TOGGLED'){
             round(function(){
+                var score = 0;
                 if(toggleType == 'CROSS'){
-                    tiles.resetRow(tile.i);
-                    tiles.resetColumn(tile.j);
+                    score += tiles.resetRow(tile.i);
+                    score += tiles.resetColumn(tile.j);
                     state.useCross();
                 } else if(toggleType == 'BOMB'){
-                    tiles.bomb(tile.i, tile.j);
+                    score = tiles.bomb(tile.i, tile.j);
                     state.useBomb();
                 } else if(toggleType == 'NUMBER'){
-                    tiles.resetAllWithSameNumber(tile.i, tile.j);
+                    score = tiles.resetAllWithSameNumber(tile.i, tile.j);
                     state.useNumber();
                 }
+                state.addRawScore(score);
             });
             $scope.gameState = 'PLAYING';
         }
     };
 
-    var nPopup = 2;
     var nPopupInit = 5;
 
     var round = function(action){
         var available = shuffled(tiles.available());
         action();
         tiles.incrementActive();
-        tiles.popup(available.slice(0, Math.min(available.length, nPopup)));
+        console.debug(state.nPopup);
+        tiles.popup(available.slice(0, Math.min(available.length, state.nPopup)));
         state.next();
         checkState();
     };

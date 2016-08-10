@@ -255,29 +255,37 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
         state.addRawScore(score);
         state.useDecrement();
         state.next();
+        $scope.gameState = 'PLAYING';
     }
 
     var toggleType = null;
 
-    var toggleWithType = function(type){
+    var toggleWithType = function(type, message){
         if($scope.gameState == 'TOGGLED'){
-            $scope.gameState = 'PLAYING';
+            if(type == toggleType){
+                $scope.gameState = 'PLAYING';
+                $scope.message = null;
+            } else {
+                toggleType = type;
+                $scope.message = message;
+            }
         } else {
             $scope.gameState = 'TOGGLED';
             toggleType = type;
+            $scope.message = message;
         }
     };
 
     $scope.toggleCrossMode = function(){
-        toggleWithType('CROSS');
+        toggleWithType('CROSS', "Click on a mine to destroy the corresponding line and row");
     };
 
     $scope.toggleBombMode = function(){
-        toggleWithType('BOMB');
+        toggleWithType('BOMB', "Click on a mine to destroy it and its surroundings.");
     };
 
     $scope.toggleNumberMode = function(){
-        toggleWithType('NUMBER');
+        toggleWithType('NUMBER', "Click on a mine to destroy all mines with the same number.");
     };
 
     $scope.clickTile = function(tile){
@@ -298,6 +306,7 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
                 state.addRawScore(score);
             });
             $scope.gameState = 'PLAYING';
+            $scope.message = "";
         }
     };
 
@@ -326,6 +335,8 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
     tiles.popup(shuffled(tiles.available()).slice(0, nPopupInit));
 
     $scope.gameState = 'PLAYING';
+
+    $scope.message = null;
 
 }]);
 

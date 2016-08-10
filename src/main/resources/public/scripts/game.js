@@ -46,7 +46,9 @@ app.factory('Tiles', [function(){
 
 app.factory('TileFactory', ['Tiles', function(Tiles){
 
-    var makeTiles = function(n){
+    var makeTiles = function(size){
+
+        var n = size;
 
         tiles = [];
 
@@ -123,7 +125,7 @@ app.factory('TileFactory', ['Tiles', function(Tiles){
                     Tiles.increment(tile);
                 }
             })
-        }
+        };
 
         tiles.resetAllWithSameNumber = function(i, j){
             var score = 0;
@@ -146,7 +148,7 @@ app.factory('TileFactory', ['Tiles', function(Tiles){
               }
             });
             return score;
-        }
+        };
 
         tiles.allClear = function(){
             var allClear = true;
@@ -192,7 +194,59 @@ app.factory('TileFactory', ['Tiles', function(Tiles){
                     tile.highlighted = true;
                 }
             });
-        }
+        };
+
+        tiles.shuffle = function(){
+            var collect = [];
+            tiles.forEach(function(tile){collect.push(tile);});
+            collect = shuffled(collect);
+            var t = 0;
+            for(var i = 0; i < n; i++){
+                for(var j = 0; j < n; j++){
+                    tiles[i][j].state = collect[t].state;
+                }
+            }
+        };
+
+        var deadlockedHorizontal = function(){
+            for(var i = 0; i < n; i++){
+                var t = tiles[i][0].state;
+                for(var j = 0; j < n; j++){
+                    if(t != tiles[i][j].state){
+                        return false;
+                    }
+                }
+            }
+            return true;
+        };
+        var deadlockedVertical = function(){
+            for(var i = 0; i < n; i++){
+                var t = tiles[0][i].state;
+                for(var j = 0; j < n; j++){
+                    if(t != tiles[j][i].state){
+                        return false;
+                    }
+                }
+            }
+            return true;
+        };
+
+        tiles.deadlocked = function(){
+            return deadlockedHorizontal() || deadlockedVertical();
+        };
+
+        tiles.grow = function(){
+            for(var i = 0; i < n; i++){
+                tiles[i].push(Tiles.generate(i, n));
+            }
+            n++;
+            var newRow = [];
+            for(var i = 0; i < n; i++){
+                newRow.push(Tiles.generate(n - 1, i));
+            }
+            tiles.push(newRow);
+        };
+
 
         return tiles;
 
@@ -271,8 +325,6 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
     var tiles = TileFactory(n);
     $scope.tiles = tiles;
 
-    console.debug($scope.tiles);
-
     $scope.tileColor = function(tile){
         return Tiles.color(tile);
     };
@@ -312,6 +364,7 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
             if(type == $scope.toggleType){
                 $scope.gameState = 'PLAYING';
                 $scope.message = null;
+                $scope.toggleType = null;
             } else {
                 $scope.toggleType = type;
                 $scope.message = message;
@@ -369,7 +422,6 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
     };
 
     var round = function(action, popup){
-        console.debug("state when playing : " + $scope.gameState);
         var available = shuffled(tiles.available());
         action();
         $scope.message = null;
@@ -377,14 +429,18 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
         tiles.incrementActive();
         tiles.popup(available.slice(0, Math.min(available.length, state.nPopup)));
         state.next();
-        console.debug("checking state !");
+        if(tiles.deadlocked()){
+            tiles.shuffle();
+        }
         checkState();
+        if(state.nPopup > tiles.length){
+            tiles.grow();
+        }
     };
 
     var checkState = function(){
         tiles.forEach(function(tile){
             if(tile.state >= Tiles.maxState){
-                console.debug("YOU LOSE");
                 $scope.gameState = 'LOST';
                 return;
             }
@@ -422,6 +478,15 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
     };
 
     $scope.message = null;
+
+    $scope.cheat = function(){
+        round(function(){
+            tiles.forEach(function(tile){
+                tile.state = 0;
+            });
+        });
+
+    }
 
 }]);
 

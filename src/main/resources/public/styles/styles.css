@@ -92,6 +92,11 @@ i {
     color: white;
 }
 
+.powerup-toggled:hover {
+    -webkit-filter: brightness(0.8);
+    filter: brightness(0.8);
+}
+
 .powerup:disabled {
     background: red;
 }

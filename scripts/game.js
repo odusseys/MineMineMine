@@ -265,7 +265,7 @@ app.factory('GameState', [function(){
 
     return function(){
 
-        var cooldowns = 5;
+        var cooldowns = 7;
 
         var incrementCooldown = 30;
 
@@ -273,7 +273,9 @@ app.factory('GameState', [function(){
 
         state.nPopup = 2;
 
-        var levelupInterval = 20;
+        var levelupInterval = 10;
+        state.level = 1;
+        state.popupInterval = 20;
         state.growInterval = 20;
 
         state.score = 0;
@@ -295,8 +297,11 @@ app.factory('GameState', [function(){
             state.decrementCDR = Math.max(0, state.decrementCDR - 1);
             state.incrementMaxStateCDR = Math.max(0, state.incrementMaxStateCDR - 1);
             state.rounds++;
-            if((state.rounds + levelupInterval/2) % levelupInterval == 0){
+            if((state.rounds + state.popupInterval/2) % state.popupInterval == 0){
                 state.nPopup ++;
+            }
+            if(state.rounds % levelupInterval == 0){
+                state.level++;
             }
         };
 

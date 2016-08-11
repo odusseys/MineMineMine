@@ -388,7 +388,7 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
     $scope.decrementAll = function(){
         var score = tiles.decrementAll();
         state.addRawScore(score);
-        state.checkHighScore();
+        checkHighScore();
         state.useDecrement();
         checkAllClear();
         state.next();

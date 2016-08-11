@@ -38,6 +38,14 @@
             </span>
                     <span ng-show="state.decrementCDR > 0" style="color: white">{{state.decrementCDR}}</span>
                 </button>
+                <button class="powerup" ng-click="incrementMaxState()"
+                        ng-disabled="state.incrementMaxStateCDR > 0 || gameState == 'LOST' "
+                        ng-mouseover="powerupHover = 'INCREMENT'" ng-mouseout="powerupHover = null">
+            <span ng-show="state.incrementMaxStateCDR == 0">
+                <i class="fa fa-hourglass-half" aria-hidden="true"></i>
+            </span>
+                    <span ng-show="state.incrementMaxStateCDR > 0" style="color: white">{{state.incrementMaxStateCDR}}</span>
+                </button>
 
                 <div class="powerup-descriptions">
                     <div ng-switch="powerupHover">
@@ -52,6 +60,9 @@
                         </div>
                         <div ng-switch-when="DECREMENT">
                             Reduce the timer on each mine by 1.
+                        </div>
+                        <div ng-switch-when="INCREMENT">
+                            Increase the maximum duration of mines by 1 indefinitely.
                         </div>
                         <div ng-switch-default>
                             <strong>Powerups</strong>
@@ -93,7 +104,7 @@
                                  ng-mouseleave="clearHovers()"
                                  ng-class="{'clickable-tile': gameState == 'TOGGLED',
                                         'highlighted-tile': tile.highlighted,
-                                        'exploding-tile': tile.state==4}">
+                                        'exploding-tile': tile.state == (Tiles.maxState - 1)}">
                                 {{tile.state==0?"":tile.state}}
                             </div>
                         </div>
@@ -102,7 +113,10 @@
                 </tbody>
             </table>
             <div ng-show="gameState=='LOST'">
-                <div id="you-lose">YOU LOSE</div>
+                <div id="you-lose">
+                    YOU LOSE
+                <div ng-if="state.score == highScore">New High Score!</div>
+                </div>
                 <button ng-click="initGame()" class="retry-button">RETRY</button>
             </div>
         </div>
@@ -113,9 +127,11 @@
             </div>
             <div class="statistics">
                 <h3>Level</h3>
-                {{state.nPopup - 1}}
+                <strong>{{state.nPopup - 1}}</strong>
                 <h3>Score</h3>
-                {{state.score}}
+                <strong>{{state.score}}</strong>
+                <h3>High score</h3>
+                {{highScore}}
             </div>
         </div>
     </div>

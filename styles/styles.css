@@ -150,7 +150,8 @@ i {
 .powerup {
     padding-top: 5px;
     display: inline-block;
-    width: 70px;
+    vertical-align: top;
+    width: 50px;
     height: 50px;
     text-align: center;
     cursor: pointer;
@@ -192,9 +193,13 @@ i {
 }
 
 .retry-button {
+    margin-top: 40px;
+    width: 100px;
+    height: 60px;
     padding: 5px;
     border: 1px black solid;
     background: white;
+    font-weight: bold;
 }
 
 .retry-button:hover {

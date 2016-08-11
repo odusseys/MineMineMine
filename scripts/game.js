@@ -267,11 +267,13 @@ app.factory('GameState', [function(){
 
         var cooldowns = 5;
 
+        var incrementCooldown = 30;
+
         var state = {};
 
         state.nPopup = 2;
 
-        var levelupInterval = 10;
+        var levelupInterval = 20;
         state.growInterval = 20;
 
         state.score = 0;
@@ -284,14 +286,16 @@ app.factory('GameState', [function(){
         state.crossCDR = 0;
         state.numberCDR = 0;
         state.decrementCDR = 0;
+        state.incrementMaxStateCDR = incrementCooldown;
 
         state.next = function(){
             state.bombCDR = Math.max(0, state.bombCDR - 1);
             state.crossCDR = Math.max(0, state.crossCDR - 1);
             state.numberCDR = Math.max(0, state.numberCDR - 1);
             state.decrementCDR = Math.max(0, state.decrementCDR - 1);
+            state.incrementMaxStateCDR = Math.max(0, state.incrementMaxStateCDR - 1);
             state.rounds++;
-            if(state.rounds % levelupInterval == 0){
+            if((state.rounds + levelupInterval/2) % levelupInterval == 0){
                 state.nPopup ++;
             }
         };
@@ -313,6 +317,10 @@ app.factory('GameState', [function(){
             state.decrementCDR = cooldowns + 1;
         };
 
+        state.useIncrementMaxState = function(){
+            state.incrementMaxStateCDR = incrementCooldown;
+        };
+
         state.addRawScore = function(s){
             state.score += scoreMultiplier * s;
         };
@@ -325,11 +333,14 @@ app.factory('GameState', [function(){
 app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
     function($scope, Tiles, TileFactory, GameState){
 
-    var n = 6   ;
+    var n = 5; //maybe start at 5 now ?
     var state = null;
     var tiles = null;
 
     var nPopupInit = 5;
+
+    $scope.Tiles = Tiles; // have to make this decent
+    $scope.highScore = 0;
 
     $scope.initGame = function(){
         tiles = TileFactory(n);
@@ -361,6 +372,7 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
         round(function(){
             var score = tiles.resetRow(i);
             state.addRawScore(score);
+            checkHighScore();
         });
     }
 
@@ -369,18 +381,25 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
         round(function(){
             var score = tiles.resetColumn(i);
             state.addRawScore(score);
+            checkHighScore();
         });
     };
 
     $scope.decrementAll = function(){
         var score = tiles.decrementAll();
         state.addRawScore(score);
+        state.checkHighScore();
         state.useDecrement();
         checkAllClear();
         state.next();
         $scope.gameState = 'PLAYING';
         $scope.toggleType = null;
-    }
+    };
+
+    $scope.incrementMaxState = function(){
+        Tiles.incrementMaxState();
+        state.useIncrementMaxState();
+    };
 
     var toggleWithType = function(type, message){
         if($scope.gameState == 'TOGGLED'){
@@ -431,14 +450,20 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
                 $scope.gameState = 'PLAYING';
                 $scope.toggleType = null;
                 $scope.message = "";
+                checkHighScore();
             });
         }
     };
+
+    var checkHighScore = function(){
+        $scope.highScore = Math.max($scope.highScore, state.score);
+    }
 
     var checkAllClear = function(){
         if(tiles.allClear()){
             $scope.message = "Cleared the board ! Bonus points !";
             state.addRawScore(10);
+            checkHighScore();
         }
     };
 
@@ -501,7 +526,6 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
                 tile.state = 0;
             });
         });
-
     }
 
 }]);

@@ -267,7 +267,7 @@ app.factory('GameState', [function(){
 
         var cooldowns = 7;
 
-        var incrementCooldown = 30;
+        var incrementCooldown = 50;
 
         var state = {};
 

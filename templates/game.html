@@ -1,4 +1,17 @@
-<div ng-controller="GameController" style="display: inline-block">
+<div ng-controller="GameController" id="game">
+
+    <div id="help-box" ng-show="showHelp">
+        <div id="help-text">
+            <p><strong>Destroy the mines before they blow!</strong></p>
+            <br/><br/>
+            <p>Click on a blue launcher to destroy all the mines on its row or column.</p>
+            <br/>
+            <p>If you find yourself in a pickle, use a powerup ! But careful, once you use one, it'll be a
+            few turns before you can use it again.</p>
+        </div>
+        <div><button class="default-button" ng-click="showHelp = false">Got it!</button></div>
+    </div>
+
     <button ng-click="cheat()" ng-hide="true">CHEAT</button>
     <div class="game-area">
         <div class="minefield">
@@ -117,11 +130,10 @@
                     YOU LOSE
                 <div ng-if="state.score == highScore">New High Score!</div>
                 </div>
-                <button ng-click="initGame()" class="retry-button">RETRY</button>
+                <button ng-click="initGame()" class="default-button">RETRY</button>
             </div>
         </div>
         <div class="game-info">
-
             <div class="message-box">
                 <p ng-show="message">{{message}}</p>
             </div>

@@ -1,6 +1,5 @@
 #header {
     text-align: center;
-    margin-bottom: 70px;
     margin-top: 50px;
 }
 
@@ -11,6 +10,37 @@
 #container {
     width: 100%;
     text-align: center;
+}
+
+#help-box {
+    border: 1px rgb(0,0,255) solid;
+    border-radius: 5px;
+    background: rgb(240,240,255);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+#help-text {
+    margin: 20px;
+    max-width: 400px;
+}
+
+.default-button {
+    padding: 10px;
+    border: 1px black solid;
+    border-radius: 2px;
+    background: white;
+    font-weight: bold;
+}
+
+.default-button:hover {
+    -webkit-filter: brightness(0.8);
+    filter: brightness(0.8);
+}
+
+#game {
+    display: inline-block;
+    margin-top: 70px;
 }
 
 .game-area {
@@ -190,19 +220,4 @@ i {
     color: red;
     font-weight: bold;
     font-size: 300%;
-}
-
-.retry-button {
-    margin-top: 40px;
-    width: 100px;
-    height: 60px;
-    padding: 5px;
-    border: 1px black solid;
-    background: white;
-    font-weight: bold;
-}
-
-.retry-button:hover {
-    -webkit-filter: brightness(0.8);
-    filter: brightness(0.8);
 }

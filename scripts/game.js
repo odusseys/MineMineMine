@@ -346,6 +346,7 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
 
     $scope.Tiles = Tiles; // have to make this decent
     $scope.highScore = 0;
+    $scope.showHelp = true;
 
     $scope.initGame = function(){
         tiles = TileFactory(n);

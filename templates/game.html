@@ -14,34 +14,62 @@
 
     <button ng-click="cheat()" ng-hide="true">CHEAT</button>
     <div class="game-area">
-
-        <div class="minefield">
-
-            <ng-include src="'templates/powerups.html'"></ng-include>
-
-            <ng-include src="'templates/minefield.html'"></ng-include>
-
-            <div ng-show="gameState=='LOST'">
-                <div id="you-lose">
-                    YOU LOSE
-                    <br/>
-                <div ng-if="state.score == highScore"><br/>New High Score!</div>
+        <div style="display: flex; text-align: left">
+            <div style="display: flex; flex-direction: column; width: 500px">
+                <div style="height: 50px;">
+                    <div class="powerup-descriptions">
+                        <div ng-switch="powerupHover">
+                            <div ng-switch-when="BOMB">
+                                Destroy a mine and its surroundings.
+                            </div>
+                            <div ng-switch-when="CROSS">
+                                Destroy a line and row simultaneously.
+                            </div>
+                            <div ng-switch-when="NUMBER">
+                                Destroy all mines with the same number.
+                            </div>
+                            <div ng-switch-when="DECREMENT">
+                                Reduce the timer on each mine by 1.
+                            </div>
+                            <div ng-switch-when="INCREMENT">
+                                Increase the maximum duration of mines by 1 indefinitely.
+                            </div>
+                            <div ng-switch-default>
+                                Hover over a powerup to see what it does
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <button ng-click="initGame()" class="default-button">RETRY</button>
+                <div style="">
+                    <ng-include src="'templates/minefield.html'" ng-show="gameState != 'LOST'"></ng-include>
+                    <div ng-show="gameState=='LOST'">
+                        <div id="you-lose">
+                            YOU LOSE
+                            <br/>
+                            <div ng-if="state.score == highScore"><br/>New High Score!</div>
+                        </div>
+                        <button ng-click="initGame()" class="default-button">RETRY</button>
+                    </div>
+                </div>
             </div>
-        </div>
-
-        <div class="game-info">
-            <div class="message-box">
-                <p ng-show="message">{{message}}</p>
+            <div style="width: 100px">
+                <div style="height: 50px;"><strong>Powerups</strong></div>
+                <ng-include src="'templates/powerups.html' "></ng-include>
             </div>
-            <div class="statistics">
-                <h3>Level</h3>
-                <strong>{{state.level}}</strong>
-                <h3>Score</h3>
-                <strong>{{state.score}}</strong>
-                <h3>High score</h3>
-                {{highScore}}
+            <div style="width: 100px;">
+                <div class="game-info">
+                    <div class="message-box">
+                        <p ng-show="message">{{message}}</p>
+                    </div>
+                    <div class="statistics">
+                        <h3>Level</h3>
+                        <strong>{{state.level}}</strong>
+                        <h3>Score</h3>
+                        <strong>{{state.score}}</strong>
+                        <h3>High score</h3>
+                        {{highScore}}
+                    </div>
+                </div>
             </div>
         </div>
 

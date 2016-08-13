@@ -14,19 +14,30 @@ function shuffled(a) {
 app.factory('Tiles', [function(){
     var tiles = {};
 
-    tiles.maxState = 5;
+    tiles.maxState = null;
 
-    tiles.generate = function(i, j){
+    var scale = null;
+
+    var computeColorScale = function(){
+        scale = d3.scaleLinear().domain([0, tiles.maxState]).range(['white', 'red']);
+    };
+
+    tiles.init = function(){
+        tiles.maxState = 5;
+        computeColorScale();
+    };
+
+    tiles.init();
+
+    tiles.color = function(tile){ return scale(tile.state) };
+
+     tiles.generate = function(i, j){
            return {
                 state: 0,
                 i: i,
                 j: j
            };
-    };
-
-    var scale = d3.scaleLinear().domain([0, tiles.maxState]).range(['white', 'red']);
-
-    tiles.color = function(tile){ return scale(tile.state) };
+      };
 
     tiles.increment = function(tile){
         tile.state ++;
@@ -40,9 +51,13 @@ app.factory('Tiles', [function(){
         tile.state = 0;
     };
 
+    tiles.resetMaxState = function(){
+
+    }
+
     tiles.incrementMaxState = function(){
         tiles.maxState++;
-        scale = d3.scaleLinear().domain([0, tiles.maxState]).range(['white', 'red']);
+        computeColorScale();
     }
 
     return tiles;
@@ -352,6 +367,7 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
 
     $scope.initGame = function(){
         tiles = TileFactory(n);
+        Tiles.init();
         state = GameState();
         $scope.tiles = tiles;
         $scope.state = state;

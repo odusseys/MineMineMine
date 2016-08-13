@@ -1,0 +1,69 @@
+<div class="powerups">
+    <button class="powerup" ng-click="toggleBombMode()"
+            ng-disabled="state.bombCDR > 0 || gameState == 'LOST' "
+            ng-class="{'powerup-toggled': toggleType=='BOMB'}"
+            ng-mouseover="powerupHover = 'BOMB'" ng-mouseout="powerupHover = null">
+            <span ng-show="state.bombCDR == 0">
+                <i class="fa fa-bomb" aria-hidden="true"></i>
+            </span>
+        <span ng-show="state.bombCDR > 0" style="color: white">{{state.bombCDR}}</span>
+    </button>
+    <button class="powerup" ng-click="toggleCrossMode()"
+            ng-disabled="state.crossCDR > 0 || gameState == 'LOST' "
+            ng-class="{'powerup-toggled': toggleType=='CROSS'}"
+            ng-mouseover="powerupHover = 'CROSS'" ng-mouseout="powerupHover = null">
+            <span ng-show="state.crossCDR == 0">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+            </span>
+        <span ng-show="state.crossCDR > 0" style="color: white">{{state.crossCDR}}</span>
+    </button>
+    <button class="powerup" ng-click="toggleNumberMode()"
+            ng-disabled="state.numberCDR > 0 || gameState == 'LOST' "
+            ng-class="{'powerup-toggled': toggleType=='NUMBER'}"
+            ng-mouseover="powerupHover = 'NUMBER'" ng-mouseout="powerupHover = null">
+            <span ng-show="state.numberCDR == 0">
+                <i class="fa fa-hashtag" aria-hidden="true"></i>
+            </span>
+        <span ng-show="state.numberCDR > 0" style="color: white">{{state.numberCDR}}</span>
+    </button>
+    <button class="powerup" ng-click="decrementAll()"
+            ng-disabled="state.decrementCDR > 0 || gameState == 'LOST' "
+            ng-mouseover="powerupHover = 'DECREMENT'" ng-mouseout="powerupHover = null">
+            <span ng-show="state.decrementCDR == 0">
+                <i class="fa fa-arrow-down" aria-hidden="true"></i>
+            </span>
+        <span ng-show="state.decrementCDR > 0" style="color: white">{{state.decrementCDR}}</span>
+    </button>
+    <button class="powerup" ng-click="incrementMaxState()"
+            ng-disabled="state.incrementMaxStateCDR > 0 || gameState == 'LOST' "
+            ng-mouseover="powerupHover = 'INCREMENT'" ng-mouseout="powerupHover = null">
+            <span ng-show="state.incrementMaxStateCDR == 0">
+                <i class="fa fa-hourglass-half" aria-hidden="true"></i>
+            </span>
+        <span ng-show="state.incrementMaxStateCDR > 0" style="color: white">{{state.incrementMaxStateCDR}}</span>
+    </button>
+
+    <div class="powerup-descriptions">
+        <div ng-switch="powerupHover">
+            <div ng-switch-when="BOMB">
+                Destroy a mine and its surroundings.
+            </div>
+            <div ng-switch-when="CROSS">
+                Destroy a line and row simultaneously.
+            </div>
+            <div ng-switch-when="NUMBER">
+                Destroy all mines with the same number.
+            </div>
+            <div ng-switch-when="DECREMENT">
+                Reduce the timer on each mine by 1.
+            </div>
+            <div ng-switch-when="INCREMENT">
+                Increase the maximum duration of mines by 1 indefinitely.
+            </div>
+            <div ng-switch-default>
+                <strong>Powerups</strong>
+            </div>
+        </div>
+    </div>
+
+</div>

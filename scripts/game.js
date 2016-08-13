@@ -545,11 +545,8 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
         $scope.powerupHover = powerup;
     };
 
-    $scope.debugBomb = function(){
-        console.debug($scope.powerupHover);
-        $scope.powerupHover = 'BOMB';
-                console.debug($scope.powerupHover);
-
+    $scope.clearPowerupHover = function(){
+        $scope.powerupHover = null;
     }
 
 }]);

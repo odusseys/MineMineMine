@@ -7,15 +7,17 @@
             <p>Click on a blue launcher to destroy all the mines on its row or column.</p>
             <br/>
             <p>If you find yourself in a pickle, use a powerup ! But careful, once you use one, it'll be a
-            few turns before you can use it again.</p>
+                few turns before you can use it again.</p>
         </div>
-        <div><button class="default-button" ng-click="showHelp = false">Got it!</button></div>
+        <div>
+            <button class="default-button" ng-click="showHelp = false">Got it!</button>
+        </div>
     </div>
 
     <button ng-click="cheat()" ng-hide="true">CHEAT</button>
     <div class="game-area" ng-hide="showHelp">
         <div style="display: flex; text-align: left">
-            <div style="display: flex; flex-direction: column; width: 400px">
+            <div class="minefield-column">
                 <div style="height: 50px;">
                     <div class="powerup-descriptions">
                         <div ng-switch="powerupHover">
@@ -40,35 +42,32 @@
                         </div>
                     </div>
                 </div>
-                <div style="">
+                <div style="text-align: center">
                     <ng-include src="'templates/minefield.html'" ng-show="gameState != 'LOST'"></ng-include>
                     <div ng-show="gameState=='LOST'">
                         <div id="you-lose">
                             YOU LOSE
-                            <br/>
                             <div ng-if="state.score == highScore"><br/>New High Score!</div>
                         </div>
-                        <button ng-click="initGame()" class="default-button">RETRY</button>
+                        <button ng-click="initGame()" class="default-button" style="margin-top: 70px">RETRY</button>
                     </div>
                 </div>
             </div>
-            <div style="width: 100px; margin-left: 30px;">
+            <div class="powerup-column">
                 <div style="height: 50px;"><strong>Powerups</strong></div>
                 <ng-include src="'templates/powerups.html' "></ng-include>
             </div>
-            <div style="width: 100px;">
-                <div class="game-info">
-                    <div class="statistics">
-                        <h3>Level</h3>
-                        <strong>{{state.level}}</strong>
-                        <h3>Score</h3>
-                        <strong>{{state.score}}</strong>
-                        <h3>High score</h3>
-                        {{highScore}}
-                    </div>
-                    <div class="message-box">
-                        <p ng-show="message">{{message}}</p>
-                    </div>
+            <div class="game-info">
+                <div class="statistics">
+                    <h3>Level</h3>
+                    <strong>{{state.level}}</strong>
+                    <h3>Score</h3>
+                    <strong>{{state.score}}</strong>
+                    <h3>High score</h3>
+                    {{highScore}}
+                </div>
+                <div class="message-box">
+                    <p ng-show="message">{{message}}</p>
                 </div>
             </div>
         </div>

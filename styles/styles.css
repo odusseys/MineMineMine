@@ -47,14 +47,24 @@
     margin: 0 auto;
 }
 
+.minefield-column {
+    display: flex;
+    flex-direction: column;
+    width: 400px
+}
+
 .game-info {
     text-align: center;
     width: 150px;
     float: left;
+    height: 300px;
 }
 
 .message-box {
-    height: 100px;
+    text-align: left;
+    font-weight: bold;
+    height: 200px;
+    margin-top: 30px;
 }
 
 .statistics {
@@ -81,6 +91,10 @@ button:focus {
 
 i {
     font-size: 300%;
+}
+.powerup-column {
+    width: 100px;
+    margin-left: 30px;
 }
 
 .powerups {

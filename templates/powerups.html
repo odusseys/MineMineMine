@@ -2,7 +2,7 @@
     <button class="powerup" ng-click="toggleBombMode()"
             ng-disabled="state.bombCDR > 0 || gameState == 'LOST' "
             ng-class="{'powerup-toggled': toggleType=='BOMB'}"
-            ng-mouseover="hoverPowerup('BOMB')" ng-mouseout="powerupHover = null">
+            ng-mouseover="hoverPowerup('BOMB')" ng-mouseout="clearPowerupHover()">
             <span ng-show="state.bombCDR == 0">
                 <i class="fa fa-bomb" aria-hidden="true"></i>
             </span>
@@ -11,7 +11,7 @@
     <button class="powerup" ng-click="toggleCrossMode()"
             ng-disabled="state.crossCDR > 0 || gameState == 'LOST' "
             ng-class="{'powerup-toggled': toggleType=='CROSS'}"
-            ng-mouseover="hoverPowerup('CROSS')" ng-mouseout="powerupHover = null">
+            ng-mouseover="hoverPowerup('CROSS')" ng-mouseout="clearPowerupHover()">
             <span ng-show="state.crossCDR == 0">
                 <i class="fa fa-plus" aria-hidden="true"></i>
             </span>
@@ -20,7 +20,7 @@
     <button class="powerup" ng-click="toggleNumberMode()"
             ng-disabled="state.numberCDR > 0 || gameState == 'LOST' "
             ng-class="{'powerup-toggled': toggleType=='NUMBER'}"
-            ng-mouseover="hoverPowerup('NUMBER')" ng-mouseout="powerupHover = null">
+            ng-mouseover="hoverPowerup('NUMBER')" ng-mouseout="clearPowerupHover()">
             <span ng-show="state.numberCDR == 0">
                 <i class="fa fa-hashtag" aria-hidden="true"></i>
             </span>
@@ -28,7 +28,7 @@
     </button>
     <button class="powerup" ng-click="decrementAll()"
             ng-disabled="state.decrementCDR > 0 || gameState == 'LOST' "
-            ng-mouseover="hoverPowerup('DECREMENT')" ng-mouseout="powerupHover = null">
+            ng-mouseover="hoverPowerup('DECREMENT')" ng-mouseout="clearPowerupHover()">
             <span ng-show="state.decrementCDR == 0">
                 <i class="fa fa-arrow-down" aria-hidden="true"></i>
             </span>
@@ -36,7 +36,7 @@
     </button>
     <button class="powerup" ng-click="incrementMaxState()"
             ng-disabled="state.incrementMaxStateCDR > 0 || gameState == 'LOST' "
-            ng-mouseover="hoverPowerup('INCREMENT')" ng-mouseout="powerupHover = null">
+            ng-mouseover="hoverPowerup('INCREMENT')" ng-mouseout="clearPowerupHover()">
             <span ng-show="state.incrementMaxStateCDR == 0">
                 <i class="fa fa-hourglass-half" aria-hidden="true"></i>
             </span>

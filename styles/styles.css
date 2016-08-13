@@ -1,3 +1,10 @@
+#copyright {
+    text-align: center;
+    position: fixed;
+    right: 50px;
+    bottom: 50px;
+}
+
 #header {
     text-align: center;
     margin-top: 50px;

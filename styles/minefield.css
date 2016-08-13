@@ -1,15 +1,15 @@
 .launchpad {
     text-align: center;
-    width: 50px;
-    height: 50px;
+    width: 4.5em;
+    height: 4.5em;
 }
 
 .launch-button {
     background-color: #54ccff;
-    width: 35px;
-    height: 35px;
+    width: 3em;
+    height: 3em;
     border: 0px;
-    box-shadow: 1px 1px #888888;
+    box-shadow: 0.1em 0.1em #888888;
     margin: 0 auto;
     cursor: pointer;
 }
@@ -34,17 +34,17 @@
 }
 
 .tile-container {
-    height: 55px;
-    width: 55px;
-    line-height: 52px;
+    height: 5em;
+    width: 5em;
+    line-height: 4.8em;
     background: white;
 }
 
 .tile {
-    height: 50px;
-    width: 50px;
+    height: 4em;
+    width: 4em;
     text-align: center;
-    box-shadow: 0px 0px 4px #F2F2F2;
+    box-shadow: 0px 0px 1em #F2F2F2;
 }
 
 .tile:hover {

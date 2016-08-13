@@ -13,9 +13,9 @@
     </div>
 
     <button ng-click="cheat()" ng-hide="true">CHEAT</button>
-    <div class="game-area">
+    <div class="game-area" ng-hide="showHelp">
         <div style="display: flex; text-align: left">
-            <div style="display: flex; flex-direction: column; width: 500px">
+            <div style="display: flex; flex-direction: column; width: 400px">
                 <div style="height: 50px;">
                     <div class="powerup-descriptions">
                         <div ng-switch="powerupHover">
@@ -52,15 +52,12 @@
                     </div>
                 </div>
             </div>
-            <div style="width: 100px">
+            <div style="width: 100px; margin-left: 30px;">
                 <div style="height: 50px;"><strong>Powerups</strong></div>
                 <ng-include src="'templates/powerups.html' "></ng-include>
             </div>
             <div style="width: 100px;">
                 <div class="game-info">
-                    <div class="message-box">
-                        <p ng-show="message">{{message}}</p>
-                    </div>
                     <div class="statistics">
                         <h3>Level</h3>
                         <strong>{{state.level}}</strong>
@@ -68,6 +65,9 @@
                         <strong>{{state.score}}</strong>
                         <h3>High score</h3>
                         {{highScore}}
+                    </div>
+                    <div class="message-box">
+                        <p ng-show="message">{{message}}</p>
                     </div>
                 </div>
             </div>

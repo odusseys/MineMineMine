@@ -265,9 +265,11 @@ app.factory('GameState', [function(){
 
     return function(){
 
-        var cooldowns = 7;
-
-        var incrementCooldown = 50;
+        var bombCooldown = 3;
+        var crossCooldown = 5;
+        var numberCooldown = 5;
+        var decrementCooldown = 10;
+        var incrementCooldown = 40;
 
         var state = {};
 
@@ -307,19 +309,19 @@ app.factory('GameState', [function(){
 
         //always cooldown + 1 because cooldown is immediately decreased after action
         state.useBomb = function(){
-            state.bombCDR = cooldowns + 1;
+            state.bombCDR = bombCooldown + 1;
         };
 
         state.useCross = function(){
-            state.crossCDR = cooldowns + 1;
+            state.crossCDR = crossCooldown + 1;
         };
 
         state.useNumber = function(){
-            state.numberCDR = cooldowns + 1;
+            state.numberCDR = numberCooldown + 1;
         };
 
         state.useDecrement = function(){
-            state.decrementCDR = cooldowns + 1;
+            state.decrementCDR = decrementCooldown + 1;
         };
 
         state.useIncrementMaxState = function(){
@@ -338,7 +340,7 @@ app.factory('GameState', [function(){
 app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
     function($scope, Tiles, TileFactory, GameState){
 
-    var n = 5; //maybe start at 5 now ?
+    var n = 5;
     var state = null;
     var tiles = null;
 
@@ -366,6 +368,11 @@ app.controller('GameController', ['$scope', 'Tiles', 'TileFactory', 'GameState',
 
     $scope.tileColor = function(tile){
         return Tiles.color(tile);
+    };
+
+    $scope.fontSize = function(){
+        var ratio = n/(tiles.length + 0.0);
+        return {'font-size': ((ratio * 100).toFixed(2) + '%')};
     };
 
     var decrement = function(i, j){
